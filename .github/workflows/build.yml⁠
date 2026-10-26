@@ -26,24 +26,11 @@ jobs:
         flutter-version: '3.19.0'
         channel: 'stable'
 
-    - name: Create Flutter Project and Inject Code
+    - name: Create Flutter Project and Setup App
       run: |
-        # नया फ्लटर प्रोजेक्ट बनाएं
         flutter create --org com.ayush.allinone all_in_one_tool
-        
-        # अगर ज़िप में main.py या कोड है, तो उसे सीधे lib/main.dart में डाल दें
-        if [ -f "AllInOneTool_CleanUI.zip" ]; then
-          unzip -o AllInOneTool_CleanUI.zip -d extracted_files/
-          if [ -f "extracted_files/main.py" ]; then
-            # अगर पाइथन से कोड जनरेट हुआ था, तो हम सीधे अपना फ्लटर कोड यहाँ लिख देते हैं
-            echo "Injecting clean UI code..."
-          fi
-        fi
-        
-        # हम सीधे गिटहब पर ही एकदम परफेक्ट pubspec.yaml और main.dart बना लेते हैं ताकि कोई एरर न आए!
         cd all_in_one_tool
         
-        # pubspec.yaml लिखना
         cat << 'EOF' > pubspec.yaml
 name: all_in_one_tool
 description: Clean & Premium Material 3 PDF & Image Suite.
