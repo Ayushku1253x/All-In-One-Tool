@@ -5,6 +5,10 @@ on:
     branches: [ main, master ]
   workflow_dispatch:
 
+# Yeh permission 403 error ko theek karne ke liye hai
+permissions:
+  contents: write
+
 jobs:
   build:
     name: Build and Release Flutter APK
@@ -48,14 +52,16 @@ jobs:
         flutter pub get
 
     - name: Build Release APK
+      # split-per-abi hata diya taaki ek single universal app bane
       run: |
         cd all_in_one_tool
-        flutter build apk --release --split-per-abi
+        flutter build apk --release
 
     - name: Create Release and Upload APK
       uses: softprops/action-gh-release@v1
       with:
-        files: all_in_one_tool/build/app/outputs/flutter-apk/app-release.apk
+        # Wildcard (**) lagaya taaki kisi bhi path pe APK ho, woh utha le
+        files: all_in_one_tool/build/app/outputs/**/*.apk
         tag_name: v3.0.0-${{ github.run_number }}
         name: "All In One Tool v3.0 Release"
         body: "Automated release built via GitHub Actions. Clean Material 3 UI, PDF & Image processing suite."
