@@ -1,4 +1,4 @@
-name: Build All In One Tool APK
+name: Build and Release APK
 
 on:
   push:
@@ -7,7 +7,7 @@ on:
 
 jobs:
   build:
-    name: Build Flutter APK
+    name: Build and Release Flutter APK
     runs-on: ubuntu-latest
 
     steps:
@@ -52,8 +52,12 @@ jobs:
         cd all_in_one_tool
         flutter build apk --release --split-per-abi
 
-    - name: Upload Final APK to GitHub Artifacts
-      uses: actions/upload-artifact@v4
+    - name: Create Release and Upload APK
+      uses: softprops/action-gh-release@v1
       with:
-        name: AllInOneTool-CleanApp
-        path: all_in_one_tool/build/app/outputs/flutter-apk/app-release.apk
+        files: all_in_one_tool/build/app/outputs/flutter-apk/app-release.apk
+        tag_name: v3.0.0-${{ github.run_number }}
+        name: "All In One Tool v3.0 Release"
+        body: "Automated release built via GitHub Actions. Clean Material 3 UI, PDF & Image processing suite."
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
