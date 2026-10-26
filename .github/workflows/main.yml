@@ -26,18 +26,32 @@ jobs:
         flutter-version: '3.19.0'
         channel: 'stable'
 
-    - name: Extract ZIP and Setup App
+    - name: Create Flutter Project and Setup App
       run: |
-        ZIP_FILE=$(ls *.zip | head -n 1)
-        echo "Found ZIP: $ZIP_FILE"
-        unzip "$ZIP_FILE" -d extracted_files/
         flutter create --org com.ayush.allinone all_in_one_tool
-        cp extracted_files/pubspec.yaml all_in_one_tool/
-        cp -r extracted_files/lib/* all_in_one_tool/lib/
-        if [ -d "extracted_files/assets" ]; then
-          cp -r extracted_files/assets all_in_one_tool/
-        fi
         cd all_in_one_tool
+        
+        cat << 'EOF' > pubspec.yaml
+name: all_in_one_tool
+description: Clean & Premium Material 3 PDF & Image Suite.
+publish_to: 'none'
+version: 3.0.0+1
+environment:
+  sdk: '>=3.0.0 <4.0.0'
+dependencies:
+  flutter:
+    sdk: flutter
+  image_picker: ^1.0.7
+  pdf: ^3.10.8
+  image: ^4.1.3
+  path_provider: ^2.1.2
+  file_picker: ^6.1.1
+  share_plus: ^7.2.1
+  google_fonts: ^6.1.0
+flutter:
+  uses-material-design: true
+EOF
+
         flutter pub get
 
     - name: Build Release APK
